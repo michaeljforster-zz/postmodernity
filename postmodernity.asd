@@ -22,8 +22,6 @@
 ;;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ;;; SOFTWARE.
 
-#-asdf3.1 (error "DESTORE requires ASDF 3.1 or later. Please upgrade your ASDF.")
-
 (asdf:defsystem "postmodernity"
   :description "Utility library for the Common Lisp Postmodern library"
   :author "Michael J. Forster <mike@forsterfamily.ca>"
