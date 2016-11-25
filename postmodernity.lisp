@@ -51,7 +51,7 @@
     (list
      (second slot-spec))
     (symbol
-     #'identity)))
+     'identity)))
 
 (defun make-slot-description (slot-spec)
   `(,(slot-spec-name slot-spec) nil :read-only t))
@@ -60,7 +60,7 @@
   (alexandria:make-keyword (slot-spec-name slot-spec)))
 
 (defun make-constructor-argument-form (slot-spec fields i)
-  `(postmodern:coalesce (funcall ,(slot-spec-reader slot-spec)
+  `(postmodern:coalesce (funcall (function ,(slot-spec-reader slot-spec))
                                  (cl-postgres:next-field (aref ,fields
                                                                ,i)))
                         nil))
