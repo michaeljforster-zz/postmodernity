@@ -65,6 +65,12 @@
                                                                ,i)))
                         nil))
 
+(defun add-result-style (style-name row-reader-name result-name)
+  ;; WARNING: Accessing unexported POSTMODERN symbols.
+  (let ((styles (cons (list style-name row-reader-name result-name)
+                      (remove style-name postmodern::*result-styles* :key #'first))))
+    (setf postmodern::*result-styles* styles)))
+
 (defmacro defpgstruct (structure-name &body slot-specs)
   "Defines a structured type, named /structure-type/, with named slots
 as specified by /slot-specs/ and defines a Postmodern row reader named
@@ -93,9 +99,10 @@ value will be initialized to the PostgreSQL string value."
       (flet ((make-constructor-argument (slot-spec)
                `(,(make-constructor-argument-keyword slot-spec)
                   ,(make-constructor-argument-form slot-spec fields (incf i)))))
-        `(prog1
+        `(eval-when (:compile-toplevel :load-toplevel :execute)
+           (prog1
            (defstruct ,structure-name
-             ,@(mapcar #'make-slot-description slot-specs))
+               ,@(mapcar #'make-slot-description slot-specs))
            (cl-postgres:def-row-reader ,row-reader-name (,fields)
              (let ((,list '()))
                (do ((,row (cl-postgres:next-row) (cl-postgres:next-row)))
@@ -104,13 +111,7 @@ value will be initialized to the PostgreSQL string value."
                            ,@(alexandria:mappend #'make-constructor-argument slot-specs))
                        ,list))
                (nreverse ,list)))
-           (flet ((add-result-style (style-name result-name)
-                    (let ((styles (cons (list style-name ',row-reader-name result-name)
-                                        ;; WARNING: Accessing unexported POSTMODERN symbols.
-                                        (remove style-name postmodern::*result-styles* :key #'first))))
-                      ;; WARNING: Accessing unexported POSTMODERN symbols.
-                      (setf postmodern::*result-styles* styles))))
              ;; WARNING: Accessing unexported POSTMODERN symbols.
-             (add-result-style ,(make-all-rows-name structure-name) 'postmodern::all-rows)
-             (add-result-style ,(make-single-row-name structure-name) 'postmodern::single-row)
-             (add-result-style ,(make-single-row!-name structure-name) 'postmodern::single-row!)))))))
+             (add-result-style ,(make-all-rows-name structure-name) ',row-reader-name 'postmodern::all-rows)
+             (add-result-style ,(make-single-row-name structure-name) ',row-reader-name 'postmodern::single-row)
+             (add-result-style ,(make-single-row!-name structure-name) ',row-reader-name 'postmodern::single-row!)))))))
