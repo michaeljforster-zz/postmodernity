@@ -80,7 +80,7 @@ DEFPGSTRUCT creates and adds to POSTMODERN::*RESULT-STYLES* the
 keywords named structure-name and by concatenating with S and !. Those
 keywords can be used as result format arguments to POSTMODERN:QUERY,
 POSTMODERN:PREPARE, POSTMODERN:DEFPREPARED, and
-POSTMODERN:DEFPREPARED-WITH-NAMES. Note that in doing so, DEFPGSTRUCT
+POSTMODERN:DEFPREPARED-WITH-NAMES. Note that, in doing so, DEFPGSTRUCT
 accesses unexported symbols from the POSTMODERN package.
 
 /structure-name/ must be a symbol, like a Common Lisp structure
@@ -101,16 +101,16 @@ value will be initialized to the PostgreSQL string value."
                   ,(make-constructor-argument-form slot-spec fields (incf i)))))
         `(eval-when (:compile-toplevel :load-toplevel :execute)
            (prog1
-           (defstruct ,structure-name
-               ,@(mapcar #'make-slot-description slot-specs))
-           (cl-postgres:def-row-reader ,row-reader-name (,fields)
-             (let ((,list '()))
-               (do ((,row (cl-postgres:next-row) (cl-postgres:next-row)))
-                   ((null ,row))
-                 (push (,default-constructor-name
-                           ,@(alexandria:mappend #'make-constructor-argument slot-specs))
-                       ,list))
-               (nreverse ,list)))
+               (defstruct ,structure-name
+                 ,@(mapcar #'make-slot-description slot-specs))
+             (cl-postgres:def-row-reader ,row-reader-name (,fields)
+               (let ((,list '()))
+                 (do ((,row (cl-postgres:next-row) (cl-postgres:next-row)))
+                     ((null ,row))
+                   (push (,default-constructor-name
+                             ,@(alexandria:mappend #'make-constructor-argument slot-specs))
+                         ,list))
+                 (nreverse ,list)))
              ;; WARNING: Accessing unexported POSTMODERN symbols.
              (add-result-style ,(make-all-rows-name structure-name) ',row-reader-name 'postmodern::all-rows)
              (add-result-style ,(make-single-row-name structure-name) ',row-reader-name 'postmodern::single-row)
