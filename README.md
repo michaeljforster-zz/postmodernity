@@ -22,7 +22,7 @@ and
 [Alexandria](https://common-lisp.net/project/alexandria/). Postmodernity
 is being developed
 with [SBCL](http://sbcl.org/), [CCL](http://ccl.clozure.com/),
-and [LispWorks](http://www.lispworks.com/) on OS X.  Hunchentools is
+and [LispWorks](http://www.lispworks.com/) on OS X.  Postmodernity is
 being deployed with SBCL on Linux/AMD64.
 
 
