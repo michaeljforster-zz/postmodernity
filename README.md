@@ -3,8 +3,8 @@
 Postmodernity is a utility library for the Common Lisp Postmodern
 library.
 
-Postmodernity provides the `DEFPGSTRUCT` function to define a Common
-Lisp structure and corresponding Postmodern row reader. `DEFPGSTRUCT` is
+Postmodernity provides the `DEFPGSTRUCT` macro to define a Common Lisp
+structure and corresponding Postmodern row reader. `DEFPGSTRUCT` is
 not intended to provide a structure-based alternative to Postmodern's
 data access objects but, rather, an alternative to list and alist row
 readers.
