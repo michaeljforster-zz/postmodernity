@@ -26,7 +26,7 @@
   :description "Utility library for the Common Lisp Postmodern library"
   :author "Michael J. Forster <mike@forsterfamily.ca>"
   :license "MIT"
-  :version "0.0.1"
+  :version "0.0.2"
   :depends-on ("alexandria"
                "postmodern")
   :serial t
